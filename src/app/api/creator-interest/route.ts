@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServerClient, isSupabaseConfigured } from "@/lib/supabase";
-
-const STAGES = ["Fed Baby", "State Baby", "Coming Home", "Touched Down", "Free World", "Manager / Family Applying for Creator"] as const;
+import { validateCreatorInterestPayload } from "@/lib/validation";
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -11,31 +10,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, email, stage, alias, managedBy, background, contentType, socialLinks } = (body ?? {}) as Record<
-    string,
-    unknown
-  >;
-
-  if (typeof name !== "string" || name.trim().length < 1) {
-    return NextResponse.json({ error: "Name is required." }, { status: 400 });
+  const result = validateCreatorInterestPayload(body);
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: 400 });
   }
-  if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return NextResponse.json({ error: "A valid email is required." }, { status: 400 });
-  }
-  if (typeof stage !== "string" || !STAGES.includes(stage as (typeof STAGES)[number])) {
-    return NextResponse.json({ error: "A valid creator stage is required." }, { status: 400 });
-  }
-
-  const record = {
-    name: name.trim(),
-    email: email.trim().toLowerCase(),
-    stage,
-    alias: typeof alias === "string" ? alias.trim().slice(0, 200) : null,
-    managed_by: typeof managedBy === "string" ? managedBy.trim().slice(0, 200) : null,
-    background: typeof background === "string" ? background.trim().slice(0, 2000) : null,
-    content_type: typeof contentType === "string" ? contentType.trim().slice(0, 500) : null,
-    social_links: typeof socialLinks === "string" ? socialLinks.trim().slice(0, 1000) : null,
-  };
+  const { name, email, stage, alias, managedBy, background, contentType, socialLinks } = result.data;
 
   if (!isSupabaseConfigured) {
     return NextResponse.json(
@@ -49,7 +28,16 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = getSupabaseServerClient();
-  const { error } = await supabase!.from("creator_interest").insert(record);
+  const { error } = await supabase!.from("creator_interest").insert({
+    name,
+    email,
+    stage,
+    alias,
+    managed_by: managedBy,
+    background,
+    content_type: contentType,
+    social_links: socialLinks,
+  });
 
   if (error) {
     if (error.code === "23505") {

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServerClient, isSupabaseConfigured } from "@/lib/supabase";
-
-const ROLES = ["Creator", "Supporter / Fan", "Creator Manager", "Family Member", "Potential Partner", "Media", "Other"] as const;
+import { validateWaitlistPayload } from "@/lib/validation";
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -11,17 +10,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, email, role, message } = (body ?? {}) as Record<string, unknown>;
-
-  if (typeof name !== "string" || name.trim().length < 1) {
-    return NextResponse.json({ error: "Name is required." }, { status: 400 });
+  const result = validateWaitlistPayload(body);
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: 400 });
   }
-  if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return NextResponse.json({ error: "A valid email is required." }, { status: 400 });
-  }
-  if (typeof role !== "string" || !ROLES.includes(role as (typeof ROLES)[number])) {
-    return NextResponse.json({ error: "A valid role is required." }, { status: 400 });
-  }
+  const { name, email, role, message } = result.data;
 
   if (!isSupabaseConfigured) {
     return NextResponse.json(
@@ -35,12 +28,7 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = getSupabaseServerClient();
-  const { error } = await supabase!.from("waitlist_signups").insert({
-    name: name.trim(),
-    email: email.trim().toLowerCase(),
-    role,
-    message: typeof message === "string" ? message.trim().slice(0, 2000) : null,
-  });
+  const { error } = await supabase!.from("waitlist_signups").insert({ name, email, role, message });
 
   if (error) {
     if (error.code === "23505") {

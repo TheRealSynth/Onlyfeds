@@ -42,7 +42,21 @@ policies, so anon/authenticated clients have no direct access.
 - `src/lib/content.ts` — centralized copy for ecosystem features, roadmap, FAQ, and contribution tiers
 - `src/lib/config.ts` — site config and the PayPal/contact env var wiring
 - `src/lib/analytics.ts` — central `trackEvent()` hook; wire a real analytics provider here later
+- `src/lib/validation.ts` — shared request validation for both form APIs (roles, stages, email, field limits)
 - `src/app/api/*` — waitlist and creator-interest form handlers
+
+## Testing
+
+```bash
+npm run lint        # ESLint
+npm run typecheck   # tsc, app + tests
+npm test            # node:test against src/lib/validation.ts
+npm run build       # production build (also type-checks the app)
+```
+
+`npm test` covers the form validation logic (email format, required fields, role/stage enums,
+optional-field trimming) using Node's built-in test runner and native TypeScript support — no
+extra test framework dependency. It does not require Supabase or a running server.
 
 ## Notes
 
