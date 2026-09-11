@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# YardFame — Pre-Launch Site
 
-## Getting Started
+**Fame Doesn't Stop at the Fence.**
 
-First, run the development server:
+Pre-launch marketing and validation site for YardFame, a creator platform connecting incarcerated,
+formerly incarcerated, and Free World creators with their supporters. Built with Next.js (App
+Router), TypeScript, and Tailwind CSS v4.
+
+## Getting started
 
 ```bash
+npm install
+cp .env.example .env.local   # fill in values as they become available
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+See `.env.example`. Nothing is required for the site to build and run — every integration
+degrades gracefully when unconfigured.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Purpose | If missing |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata/OG/sitemap | Falls back to a placeholder domain |
+| `NEXT_PUBLIC_PAYPAL_SUPPORT_URL` | PayPal destination for Founding Supporter contributions | Contribution CTA shows a "checkout being finalized" note instead of linking out |
+| `NEXT_PUBLIC_CONTACT_EMAIL` | Public contact email | Falls back to `info@yardfame.com` |
+| `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | Persist waitlist & creator-interest submissions | Forms still validate and respond successfully, but nothing is stored server-side |
 
-## Learn More
+## Data model
 
-To learn more about Next.js, take a look at the following resources:
+`supabase/migrations/0001_prelaunch_signups.sql` defines two tables:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `waitlist_signups` — general waitlist (`/api/waitlist`)
+- `creator_interest` — creator interest form (`/api/creator-interest`)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Both are insert-only from the server using the service role key; RLS is enabled with no public
+policies, so anon/authenticated clients have no direct access.
 
-## Deploy on Vercel
+## Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `src/app/page.tsx` — the single-page landing experience, composed from `src/components/sections/*`
+- `src/lib/content.ts` — centralized copy for ecosystem features, roadmap, FAQ, and contribution tiers
+- `src/lib/config.ts` — site config and the PayPal/contact env var wiring
+- `src/lib/analytics.ts` — central `trackEvent()` hook; wire a real analytics provider here later
+- `src/app/api/*` — waitlist and creator-interest form handlers
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+
+This is the pre-launch site only. No prior application code existed in this repository at the
+start of this work (empty repo, no commits/branches) — there is nothing else to preserve or
+coexist with yet.
