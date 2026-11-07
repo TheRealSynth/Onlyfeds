@@ -30,6 +30,11 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
+      - name: Install the tested Node version
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "22.22.2"
+          package-manager-cache: false
       - name: Verify identity and run native gates
         run: |
           $ErrorActionPreference = 'Stop'
