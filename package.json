@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p tests/tsconfig.json",
+    "typecheck": "next typegen && tsc --noEmit && tsc --noEmit -p tests/tsconfig.json",
     "test": "node --experimental-strip-types --test tests/*.test.ts"
   },
   "dependencies": {

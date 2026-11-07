@@ -41,7 +41,14 @@ export function CreatorInterest() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "Something went wrong. Please try again.");
+        setError(typeof data?.error === "string" && data.error ? data.error : "Something went wrong. Please try again.");
+        setStatus("error");
+        return;
+      }
+      if (data?.ok !== true || data?.stored !== true) {
+        setError(data?.stored === false
+          ? "Your details weren't saved. Submissions are temporarily unavailable. Please try again later."
+          : "We couldn't confirm your details were saved. Please try again.");
         setStatus("error");
         return;
       }
@@ -176,7 +183,7 @@ export function CreatorInterest() {
                 />
               </div>
 
-              {error && <p className="text-sm text-crimson">{error}</p>}
+              {error && <p role="alert" className="text-sm text-crimson">{error}</p>}
 
               <button
                 type="submit"
