@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Container, Section, SectionHeading } from "@/components/ui/primitives";
 import { trackEvent } from "@/lib/analytics";
 
@@ -9,10 +9,11 @@ const ROLES = ["Creator", "Supporter / Fan", "Creator Manager", "Family Member",
 export function Waitlist() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const inFlight = useRef(false);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (status === "submitting" || status === "success") return;
+    if (inFlight.current || status === "submitting" || status === "success") return;
 
     const form = new FormData(e.currentTarget);
     const payload = {
@@ -27,6 +28,7 @@ export function Waitlist() {
       return;
     }
 
+    inFlight.current = true;
     setStatus("submitting");
     setError(null);
     try {
@@ -53,6 +55,8 @@ export function Waitlist() {
     } catch {
       setError("Network error. Please try again.");
       setStatus("error");
+    } finally {
+      inFlight.current = false;
     }
   }
 
@@ -133,8 +137,8 @@ export function Waitlist() {
 
               <button
                 type="submit"
-                disabled={status === "submitting"}
-                className="mt-2 inline-flex min-h-[44px] items-center justify-center rounded-full bg-gold px-6 py-3.5 text-base font-semibold text-ink transition-all hover:bg-gold-bright disabled:opacity-60"
+                aria-disabled={status === "submitting"}
+                className="mt-2 inline-flex min-h-[44px] items-center justify-center rounded-full bg-gold px-6 py-3.5 text-base font-semibold text-ink transition-all hover:bg-gold-bright aria-disabled:opacity-60"
               >
                 {status === "submitting" ? "Joining..." : "Join the Yard"}
               </button>

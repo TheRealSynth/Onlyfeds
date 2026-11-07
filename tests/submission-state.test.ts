@@ -20,7 +20,7 @@ function elements(node: unknown): Element[] {
   return [el, ...elements(el.props.children)];
 }
 
-function fixture(component: string, replies: Response[]) {
+function fixture(component: string, replies: Array<Response | Promise<Response>>) {
   const states: unknown[] = [];
   const events: unknown[][] = [];
   const requests: { url: string; body: unknown }[] = [];
@@ -38,6 +38,11 @@ function fixture(component: string, replies: Response[]) {
           const index = cursor++;
           if (!(index in states)) states[index] = initial;
           return [states[index], (value: unknown) => { states[index] = value; }];
+        },
+        useRef(initial: unknown) {
+          const index = cursor++;
+          if (!(index in states)) states[index] = { current: initial };
+          return states[index];
         },
       };
       if (id === "react/jsx-runtime") return jsxRuntime;
@@ -65,7 +70,14 @@ function fixture(component: string, replies: Response[]) {
     assert.ok(el, "Form remains available for submission");
     await (el.props.onSubmit as (event: unknown) => Promise<void>)({ preventDefault() {}, currentTarget: fields });
   }
-  return { states, events, requests, render, form, submit };
+  function submitSameHandlerTwice() {
+    const el = form();
+    assert.ok(el);
+    const handler = el.props.onSubmit as (event: unknown) => Promise<void>;
+    const event = { preventDefault() {}, currentTarget: fields };
+    return [handler(event), handler(event)];
+  }
+  return { states, events, requests, render, form, submit, submitSameHandlerTwice };
 }
 
 function reply(body: unknown, status = 200) {
@@ -73,6 +85,24 @@ function reply(body: unknown, status = 200) {
 }
 
 for (const component of ["Waitlist", "CreatorInterest"]) {
+  test(`${component}: pending submission fences even a stale handler and releases for retry`, async () => {
+    let release!: (response: Response) => void;
+    const pending = new Promise<Response>((resolve) => { release = resolve; });
+    const f = fixture(component, [pending, reply({ ok: true, stored: true })]);
+    const [first, duplicate] = f.submitSameHandlerTwice();
+    await duplicate;
+    assert.equal(f.requests.length, 1);
+    assert.equal(f.states[0], "submitting");
+    assert.equal(f.events.length, 0);
+    release(reply({ ok: true, stored: false }, 202));
+    await first;
+    assert.ok(f.form());
+    await f.submit();
+    assert.equal(f.requests.length, 2);
+    assert.equal(f.events.length, 1);
+    assert.equal(f.states[0], "success");
+  });
+
   test(`${component}: an explicitly persisted submission confirms success`, async () => {
     const f = fixture(component, [reply({ ok: true, stored: true }, 201)]);
     await f.submit();
