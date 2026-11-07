@@ -1,0 +1,48 @@
+{
+  "recorded_at": "2026-11-07T12:29:23.255495Z",
+  "head": "1603b78a93441ec33a0720d1ecbe3f86ae947c1f",
+  "execution": 83111,
+  "lint_typecheck_unit_tests_passed": true,
+  "unit_tests": 26,
+  "light_native_log_sha256": "1e7ad9af262b98864ca43829ac7dd9a989532346a31d9b8d2b928aedf2a0fd30",
+  "files": {
+    "package.json": "c5454c07da207045b8cd3d9e224a5a97fdb060db9e1087f31b6e1747e51686c6",
+    "src/components/sections/Waitlist.tsx": "cd5225bfef7e9dc3bd24549eb2e5e42d9ac6c125eedee1572b2855f78746b610",
+    "src/components/sections/CreatorInterest.tsx": "eb4ce11eda7b854e22c9496ce49d335bcb774d89fb10db5e375d22e87020351d",
+    "tests/submission-state.test.ts": "a4e2d9692f55ca3bd03529b3c38a1cbb7010869ba85236ec651dcda8ff8a9a8e"
+  },
+  "production_build_exit": 0,
+  "build_log_sha256": "6c08d6e28b73e629f00bc3820b7b509edbac0baea3b31d78ed246f32b5dce4f6",
+  "browser_exit": 0,
+  "browser_checks": 64,
+  "browser_log_sha256": "55649bd04b054f482f8269de20a78f497e6f568f93b8f45160154858914cda2b",
+  "visual": {
+    "images_inspected": true,
+    "images": [
+      {
+        "file": "waitlist-unsaved-390.png",
+        "sha256": "9b7f0b2b0e045e2c9e0567c83c68a8a22879217deea0c35be9861f00fd607f44",
+        "inspected": true
+      },
+      {
+        "file": "creator-interest-unsaved-390.png",
+        "sha256": "c41caa1723ab30e8aa2136d281ab5cf377d7f20a2da96e4d8176149b437843bf",
+        "inspected": true
+      }
+    ]
+  },
+  "actual_unconfigured_local_api": true,
+  "configured_saved_responses": "Synthetic transport fixtures; no provider or customer writes",
+  "owned_app_stopped": true,
+  "source_clean": true,
+  "resource_control": "Only own finite process family: CPU7 and BELOW_NORMAL; observed descendants all match",
+  "first_browser_focus_failure_retained": true,
+  "original_failed_baseline_retained": true,
+  "cloud_database_operations": 0,
+  "source_accepted": false,
+  "runtime_accepted": false,
+  "customer_accepted": false,
+  "source_ci_pending": true,
+  "ci_dependency_admission": 6707040771,
+  "local_native_precedes_metadata_only_ci_workflow": true
+}

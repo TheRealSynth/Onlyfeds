@@ -24,7 +24,7 @@ degrades gracefully when unconfigured.
 | `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata/OG/sitemap | Falls back to a placeholder domain |
 | `NEXT_PUBLIC_PAYPAL_SUPPORT_URL` | PayPal destination for Founding Supporter contributions | Contribution CTA shows a "checkout being finalized" note instead of linking out |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Public contact email | Falls back to `info@yardfame.com` |
-| `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | Persist waitlist & creator-interest submissions | Forms still validate and respond successfully, but nothing is stored server-side |
+| `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | Persist waitlist & creator-interest submissions | The API validates without storing; forms explain that details were not saved and retain them for retry |
 
 ## Data model
 
@@ -49,14 +49,27 @@ policies, so anon/authenticated clients have no direct access.
 
 ```bash
 npm run lint        # ESLint
-npm run typecheck   # tsc, app + tests
+npm run typecheck   # generate Next route types, then tsc, app + tests
 npm test            # node:test against src/lib/validation.ts
 npm run build       # production build (also type-checks the app)
 ```
 
 `npm test` covers the form validation logic (email format, required fields, role/stage enums,
-optional-field trimming) using Node's built-in test runner and native TypeScript support — no
-extra test framework dependency. It does not require Supabase or a running server.
+optional-field trimming) and both real component submit handlers using a lightweight state
+fixture. It checks confirmed saves, unsaved submissions and retry, invalid confirmations,
+HTTP failures and invalid JSON. The state fixture is separate from DOM/browser acceptance.
+Tests use Node's built-in runner and native TypeScript support, with no extra test framework
+dependency. They do not require Supabase or a running server.
+
+The `Prelaunch quality` workflow runs those four native gates against the submitted PR commit
+on an explicitly admitted, single-job Windows VPS runner. It accepts same-repository PRs only,
+uses a read-only token without persisted checkout credentials, and requires the Network Service
+identity. Its test process uses one logical CPU at background priority. Provision an ephemeral
+runner with the `onlyfeds-prelaunch-ci` label for an admitted run; this workflow does not create
+a runner or a scheduler. Require approval for **all external contributors** before attaching a
+runner to this public repository, and do not approve external PR workflows on the shared VPS.
+The runner deregisters after its single job. Runtime storage and real signup acceptance are
+separate from this source check.
 
 ## Notes
 

@@ -1,0 +1,64 @@
+name: Prelaunch quality
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prelaunch-quality-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  quality:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, Windows, X64, onlyfeds-prelaunch-ci]
+    timeout-minutes: 20
+    env:
+      CI: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+      SUPABASE_URL: ""
+      SUPABASE_SERVICE_ROLE_KEY: ""
+      NEXT_PUBLIC_PAYPAL_SUPPORT_URL: ""
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - name: Checkout submitted source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Install the tested Node version
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "22.22.2"
+          package-manager-cache: false
+      - name: Verify identity and run native gates
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $taskProcess = Get-Process -Id $PID
+          $taskProcess.ProcessorAffinity = [IntPtr]128
+          $taskProcess.PriorityClass = 'BelowNormal'
+          $taskIdentity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+          if ($taskIdentity.User.Value -ne 'S-1-5-20') { throw 'CI requires the dedicated Network Service runner.' }
+          $actualHead = (git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $actualHead -ne '${{ github.event.pull_request.head.sha }}') { throw 'Submitted source mismatch.' }
+          Write-Output "SOURCE_HEAD=$actualHead"
+          Write-Output "SOURCE_TREE=$(git rev-parse 'HEAD^{tree}')"
+          node --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node -e "const os=require('node:os');if(+process.versions.node.split('.')[0]!==22||os.availableParallelism()!==1||os.getPriority()!==10)process.exit(1)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm.cmd ci --no-audit --no-fund
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm.cmd run lint
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm.cmd run typecheck
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm.cmd test
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm.cmd run build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Write-Output 'NATIVE_GATES_PASSED=lint,typecheck,test,build'

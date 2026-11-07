@@ -1,0 +1,82 @@
+{
+  "mission_id": "YARDFAME-PRELAUNCH-HONEST-SUBMISSION-20261107-01a",
+  "project": "TheRealSynth/Onlyfeds",
+  "worker_id": "Actual Codex desktop/ChatGPT-Work01a1943c",
+  "protocol_version": "1.0.0",
+  "status": "PARTIAL",
+  "summary": "Both prelaunch signup forms now require explicit ok:true and stored:true before confirming a save or emitting success analytics. Unsaved202, malformed and failed responses retain entered details and support retry. A synchronous in-flight fence prevents duplicate requests while aria-disabled preserves keyboard focus. Clean-checkout typecheck generates Next route types first. Actual26 unit tests, production build and64 browser checks pass; current390px views inspected. Original failing baseline and first browser focus failure retained. Exact source CI remains pending; no provider/runtime/customer acceptance.",
+  "files_changed": [
+    "README.md",
+    "package.json",
+    "src/components/sections/CreatorInterest.tsx",
+    "src/components/sections/Waitlist.tsx",
+    "tests/submission-state.test.ts",
+    ".github/workflows/quality.yml",
+    "docs/evidence/honest-submission/native.json",
+    ".agent-results/YARDFAME-PRELAUNCH-HONEST-SUBMISSION-20261107-01a.json",
+    "docs/evidence/honest-submission/first-ci-failure.json"
+  ],
+  "commands_run": [
+    "Own locked npm ci",
+    "npm run lint",
+    "npm run typecheck",
+    "npm test",
+    "npm run build",
+    "Actual production-server browser acceptance64",
+    "Actual current mobile screenshot inspection",
+    "YAML control/read-only/exact-head/identity review"
+  ],
+  "tests": [
+    {
+      "name": "Payload and actual submit-handler state regressions",
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "name": "Actual browser production build",
+      "passed": 64,
+      "failed": 0
+    }
+  ],
+  "verification": {
+    "passed": false,
+    "native_passed": true,
+    "checks": [
+      "Real unconfigured local API202 and synthetic explicitly saved transport responses distinguished; no provider writes",
+      "All26 unit/current production build/browser64 and images passed, source hashes/lock unchanged",
+      "Synchronous in-flight retry fence and visible keyboard focus retained; original baseline/browser failure preserved",
+      "New CI workflow is metadata only, exact submitted head/read-only token/same-repo only/Network Service/oneCPU background; actual CI acceptance pending",
+      "Source claim issue1 actual created_at supplies the unit start timestamp; replaces imprecise preparation timestamp before source acceptance.",
+      "Actual missing-Node CI first cause repaired by pinned official setup-node/exact22.22.2; all four required local native gates rerun before correction push, no unchanged browser rerun or test weakening."
+    ]
+  },
+  "commit": "a98318de205176eed7935c204b8e008a6eafb5fb",
+  "deployment": null,
+  "blockers": [
+    "Exact submitted-head CI and source acceptance pending; bounded VPS CI dependency admitted under source issue1"
+  ],
+  "deferred_items": [
+    "Configured Supabase/provider/genuine signup/runtime/customer acceptance"
+  ],
+  "next_action": "Publish this reviewed candidate after fresh authority/ownership and native input checks; execute only its exact trusted same-repository PR job on an admitted single-job Network Service VPS runner with all-external-contributor approval enforced. Verify original CI logs/26tests/build/actual checkout/full tree, ordinary source QA/current merge authority, expected-head merge/entire tree and source sender/readback before releasing own issue1. No outside PR approvals, persistent runner, scheduler, provider writes or runtime/customer credit.",
+  "evidence": [
+    "https://github.com/TheRealSynth/Onlyfeds/issues/1#issuecomment-6707040771",
+    "docs/evidence/honest-submission/native.json"
+  ],
+  "started_at": "2026-11-07T10:15:43Z",
+  "completed_at": "2026-11-07T12:50:52.907020Z",
+  "ci_dependency_repair": {
+    "prior_run": 42373566789,
+    "prior_job": 128406467671,
+    "first_cause": "Network Service PATH had no Node; native suite never started",
+    "official_setup_node_pin": "249970729cb0ef3589644e2896645e5dc5ba9c38",
+    "installed_node": "22.22.2",
+    "automatic_package_manager_cache": false,
+    "prepush_native_log_sha256": "a4dde16a079ca22f9871113ea1e62812fd62b171d67595016b93edfdeb7907d2",
+    "all_four_required_native_gates_passed": true,
+    "original_failure_preserved": true,
+    "prior_ephemeral_deregistered_and_own_service_removed": true,
+    "existing_service_configs_unchanged": true,
+    "current_exact_ci_pending": true
+  }
+}

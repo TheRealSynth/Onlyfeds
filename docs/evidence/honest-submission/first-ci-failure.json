@@ -1,0 +1,20 @@
+{
+  "recorded_at": "2026-11-07T12:45:56.006537+00:00",
+  "run": 42373566789,
+  "job": 128406467671,
+  "head": "a98318de205176eed7935c204b8e008a6eafb5fb",
+  "conclusion": "failure",
+  "first_cause": "Network Service has no node command on its PATH; stopped before npm ci and all native gates",
+  "exact_source_and_network_service_guard_passed": true,
+  "cleanup_steps_success": true,
+  "ephemeral_automatically_deregistered": true,
+  "own_service_stopped": true,
+  "original_decoded_log_sha256": "ad43fcc194b8989fd2c19e51e7475061d599654bd6963b6297a6a99c59da6014",
+  "configuration_wrapper_failure": "UTF8 text reader rejected OEM byte0xfb and lost its config stdout; actual config/job/service/API state reconciled before any retry",
+  "no_product_failure_claim": true,
+  "repair": "Pin official setup-node and exact22.22.2; no test or source acceptance gate waived; new changed-head CI only",
+  "log_encoding_provenance": "Exact MCP decoded string encoded as UTF8 bytes; earlier apply_patch-rendered copy separately retained",
+  "own_stopped_service_removed": true,
+  "existing_service_configs_unchanged": true,
+  "source_published_receipt": 6707140270
+}
