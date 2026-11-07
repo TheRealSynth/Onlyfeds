@@ -1,0 +1,65 @@
+{
+  "mission_id": "YARDFAME-PRELAUNCH-HONEST-SUBMISSION-20261107-01a",
+  "project": "TheRealSynth/Onlyfeds",
+  "worker_id": "Actual Codex desktop/ChatGPT-Work01a1943c",
+  "protocol_version": "1.0.0",
+  "status": "PARTIAL",
+  "summary": "Both prelaunch signup forms now require explicit ok:true and stored:true before confirming a save or emitting success analytics. Unsaved202, malformed and failed responses retain entered details and support retry. A synchronous in-flight fence prevents duplicate requests while aria-disabled preserves keyboard focus. Clean-checkout typecheck generates Next route types first. Actual26 unit tests, production build and64 browser checks pass; current390px views inspected. Original failing baseline and first browser focus failure retained. Exact source CI remains pending; no provider/runtime/customer acceptance.",
+  "files_changed": [
+    "README.md",
+    "package.json",
+    "src/components/sections/CreatorInterest.tsx",
+    "src/components/sections/Waitlist.tsx",
+    "tests/submission-state.test.ts",
+    ".github/workflows/quality.yml",
+    "docs/evidence/honest-submission/native.json",
+    ".agent-results/YARDFAME-PRELAUNCH-HONEST-SUBMISSION-20261107-01a.json"
+  ],
+  "commands_run": [
+    "Own locked npm ci",
+    "npm run lint",
+    "npm run typecheck",
+    "npm test",
+    "npm run build",
+    "Actual production-server browser acceptance64",
+    "Actual current mobile screenshot inspection",
+    "YAML control/read-only/exact-head/identity review"
+  ],
+  "tests": [
+    {
+      "name": "Payload and actual submit-handler state regressions",
+      "passed": 26,
+      "failed": 0
+    },
+    {
+      "name": "Actual browser production build",
+      "passed": 64,
+      "failed": 0
+    }
+  ],
+  "verification": {
+    "passed": false,
+    "native_passed": true,
+    "checks": [
+      "Real unconfigured local API202 and synthetic explicitly saved transport responses distinguished; no provider writes",
+      "All26 unit/current production build/browser64 and images passed, source hashes/lock unchanged",
+      "Synchronous in-flight retry fence and visible keyboard focus retained; original baseline/browser failure preserved",
+      "New CI workflow is metadata only, exact submitted head/read-only token/same-repo only/Network Service/oneCPU background; actual CI acceptance pending"
+    ]
+  },
+  "commit": "1603b78a93441ec33a0720d1ecbe3f86ae947c1f",
+  "deployment": null,
+  "blockers": [
+    "Exact submitted-head CI and source acceptance pending; bounded VPS CI dependency admitted under source issue1"
+  ],
+  "deferred_items": [
+    "Configured Supabase/provider/genuine signup/runtime/customer acceptance"
+  ],
+  "next_action": "Publish this reviewed candidate after fresh authority/ownership and native input checks; execute only its exact trusted same-repository PR job on an admitted single-job Network Service VPS runner with all-external-contributor approval enforced. Verify original CI logs/26tests/build/actual checkout/full tree, ordinary source QA/current merge authority, expected-head merge/entire tree and source sender/readback before releasing own issue1. No outside PR approvals, persistent runner, scheduler, provider writes or runtime/customer credit.",
+  "evidence": [
+    "https://github.com/TheRealSynth/Onlyfeds/issues/1#issuecomment-6707040771",
+    "docs/evidence/honest-submission/native.json"
+  ],
+  "started_at": "2026-11-07T10:10:00Z",
+  "completed_at": "2026-11-07T12:39:43.257715Z"
+}

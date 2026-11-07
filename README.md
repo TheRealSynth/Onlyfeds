@@ -61,6 +61,16 @@ HTTP failures and invalid JSON. The state fixture is separate from DOM/browser a
 Tests use Node's built-in runner and native TypeScript support, with no extra test framework
 dependency. They do not require Supabase or a running server.
 
+The `Prelaunch quality` workflow runs those four native gates against the submitted PR commit
+on an explicitly admitted, single-job Windows VPS runner. It accepts same-repository PRs only,
+uses a read-only token without persisted checkout credentials, and requires the Network Service
+identity. Its test process uses one logical CPU at background priority. Provision an ephemeral
+runner with the `onlyfeds-prelaunch-ci` label for an admitted run; this workflow does not create
+a runner or a scheduler. Require approval for **all external contributors** before attaching a
+runner to this public repository, and do not approve external PR workflows on the shared VPS.
+The runner deregisters after its single job. Runtime storage and real signup acceptance are
+separate from this source check.
+
 ## Notes
 
 This is the pre-launch site only. No prior application code existed in this repository at the
